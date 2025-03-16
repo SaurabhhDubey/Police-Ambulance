@@ -1,7 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 export default function Portal () {
-
+   const navigate = useNavigate();
     return (
        <div
        className="h-screen bg-cover opacity-90 flex justify-center items-center bg-center bg-[url('https://res.cloudinary.com/dyjmgpb5p/image/upload/v1741441911/frontPortalimage_ulbasm.png')]">
@@ -14,8 +16,9 @@ export default function Portal () {
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
+          onClick={()=> navigate("Police")}
         >
-        
+        Police
         </div>
         <div className="w-40 h-40 md:w-60 md:h-60  p-4 flex justify-center items-center rounded-xl hover:cursor-pointer opacity-85"
         style={{
@@ -24,9 +27,11 @@ export default function Portal () {
             backgroundSize: "cover",
             
           }}
-        >
+          onClick={()=> navigate("Ambulance")}
+        > Ambulance
         </div>
        </div>
+       <Outlet/>
 
        </div>
         

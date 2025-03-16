@@ -4,8 +4,8 @@ import App from './App.jsx'
 import './index.css'
 import Portal from './components/Portal/Portal.jsx'
 import {createBrowserRouter, RouterProvider , createRoutesFromElements, Route } from 'react-router-dom'
-import Police from './components/Portal/Police/Police.jsx'
-import Ambulance from './components/Portal/Ambulance/Ambulance.jsx'
+import Police from './components/Police/Police.jsx'
+import Ambulance from './components/Ambulance/Ambulance.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(

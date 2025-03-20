@@ -18,7 +18,7 @@ export default function Portal () {
           }}
           onClick={()=> navigate("Police")}
         >
-        Police
+        
         </div>
         <div className="w-40 h-40 md:w-60 md:h-60  p-4 flex justify-center items-center rounded-xl hover:cursor-pointer opacity-85"
         style={{
@@ -28,7 +28,7 @@ export default function Portal () {
             
           }}
           onClick={()=> navigate("Ambulance")}
-        > Ambulance
+        > 
         </div>
        </div>
        <Outlet/>

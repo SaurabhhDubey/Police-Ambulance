@@ -7,16 +7,22 @@ import {createBrowserRouter, RouterProvider , createRoutesFromElements, Route } 
 import Police from './components/Police/police.jsx'
 import Ambulance from './components/Ambulance/Ambulance.jsx'
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path='/' element={<Portal/>}>
-    <Route path='/Police' element={< Police/>} />  
-    <Route path='/Ambulance' element={< Ambulance/>} />  
+//const router = createBrowserRouter(
+  //createRoutesFromElements(
+    //<Route path='' element={<Portal/>}>
+    //<Route path='/Police' element={< Police/>} />  
+    //<Route path='/Ambulance' element={< Ambulance/>} />  
 
-    </Route>
-  )
-)
+    //</Route>
+ // )
+//)
 
+
+const router = createBrowserRouter([
+  { path: "/", element: <Portal /> },
+  { path: "/Police", element: <Police /> },
+  { path: "/Ambulance", element: <Ambulance /> },
+]);
 
 
 createRoot(document.getElementById('root')).render(

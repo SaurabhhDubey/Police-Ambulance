@@ -6,6 +6,9 @@ import Portal from './components/Portal/Portal.jsx'
 import {createBrowserRouter, RouterProvider , createRoutesFromElements, Route } from 'react-router-dom'
 import Police from './components/Police/police.jsx'
 import Ambulance from './components/Ambulance/Ambulance.jsx'
+import Contact from './components/Police/Contact.jsx'
+import About from './components/Police/About.jsx'
+
 
 //const router = createBrowserRouter(
   //createRoutesFromElements(
@@ -22,6 +25,9 @@ const router = createBrowserRouter([
   { path: "/", element: <Portal /> },
   { path: "/Police", element: <Police /> },
   { path: "/Ambulance", element: <Ambulance /> },
+  {path:"/Contact" , element:<Contact/>},
+  {path:"/About", element:<About/>},
+
 ]);
 
 

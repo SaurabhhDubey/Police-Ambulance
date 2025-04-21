@@ -8,6 +8,8 @@ import Police from './components/Police/police.jsx'
 import Ambulance from './components/Ambulance/Ambulance.jsx'
 import Contact from './components/Police/Contact.jsx'
 import About from './components/Police/About.jsx'
+import Register from './components/Ambulance/Register.jsx'
+import Information from './components/Ambulance/Information.jsx'
 
 
 //const router = createBrowserRouter(
@@ -27,6 +29,8 @@ const router = createBrowserRouter([
   { path: "/Ambulance", element: <Ambulance /> },
   {path:"/Contact" , element:<Contact/>},
   {path:"/About", element:<About/>},
+  {path:"/Register",element:<Register/>},
+  {path:"/Information",element:<Information/>},
   
 
 ]);

@@ -1,153 +1,144 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import axios from 'axios';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix Leaflet icon issue
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+});
 
 function Police() {
   const navigate = useNavigate();
-  const mapRef = useRef(null);
   const [searchLocation, setSearchLocation] = useState('');
+  const [coordinates, setCoordinates] = useState(null);
+  const [policeStations, setPoliceStations] = useState([]);
   const [showMap, setShowMap] = useState(false);
-  const [isMapsReady, setIsMapsReady] = useState(false);
 
-  // Load Google Maps JS API
-  const loadGoogleMapsAPI = () => {
-    return new Promise((resolve, reject) => {
-      if (window.google && window.google.maps) {
-        resolve();
+  const geocodeLocation = async () => {
+    if (!searchLocation.trim()) {
+      alert('Please enter a location!');
+      return;
+    }
+
+    try {
+      const geoRes = await axios.get('https://nominatim.openstreetmap.org/search', {
+        params: { q: searchLocation, format: 'json' },
+      });
+
+      if (geoRes.data.length === 0) {
+        alert('Location not found');
         return;
       }
 
-      const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-      if (!existingScript) {
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCJYUlWJWn2os-ZwMhSLjSwSQPtwHxPLOQ&libraries=places&loading=async`;
+      const { lat, lon } = geoRes.data[0];
+      const latNum = parseFloat(lat);
+      const lonNum = parseFloat(lon);
+      setCoordinates([latNum, lonNum]);
+      setShowMap(true);
 
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      } else {
-        const checkReady = setInterval(() => {
-          if (window.google && window.google.maps) {
-            clearInterval(checkReady);
-            resolve();
-          }
-        }, 100);
-      }
-    });
-  };
+      const overpassQuery = `
+        [out:json];
+        (
+          node["amenity"="police"](around:5000,${latNum},${lonNum});
+          way["amenity"="police"](around:5000,${latNum},${lonNum});
+          relation["amenity"="police"](around:5000,${latNum},${lonNum});
+        );
+        out center;
+      `;
 
-  // Initialize the map with police stations nearby
-  const initMap = (lat, lng) => {
-    const location = { lat, lng };
-    const map = new window.google.maps.Map(mapRef.current, {
-      center: location,
-      zoom: 14,
-    });
+      const overpassRes = await axios.post(
+        'https://overpass-api.de/api/interpreter',
+        overpassQuery,
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+      );
 
-    const service = new window.google.maps.places.PlacesService(map);
-    service.nearbySearch(
-      {
-        location,
-        radius: 5000,
-        type: 'police',
-      },
-      (results, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-          results.forEach((place) => {
-            new window.google.maps.Marker({
-              position: place.geometry.location,
-              map,
-              title: place.name,
-            });
-          });
-        }
-      }
-    );
-  };
+      const stations = overpassRes.data.elements.map((item) => {
+        const center = item.lat ? { lat: item.lat, lon: item.lon } : item.center;
+        return {
+          id: item.id,
+          name: item.tags?.name || 'Unnamed Police Station',
+          lat: center.lat,
+          lon: center.lon,
+        };
+      });
 
-  // Trigger search & map load
-  const geocodeLocation = () => {
-    if (!isMapsReady || !window.google) {
-      alert('Google Maps is still loading. Please wait a moment.');
-      return;
+      setPoliceStations(stations);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      alert('An error occurred while fetching data.');
     }
-  
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address: searchLocation }, (results, status) => {
-      console.log('Geocoder Status:', status);
-      console.log('Geocoder Results:', results);
-  
-      if (status === 'OK') {
-        const lat = results[0].geometry.location.lat();
-        const lng = results[0].geometry.location.lng();
-        initMap(lat, lng);
-        setShowMap(true);
-      } else {
-        alert('Geocode failed: ' + status);
-      }
-    });
   };
-  
-  
-
-  
-  useEffect(() => {
-    loadGoogleMapsAPI()
-      .then(() => {
-        setIsMapsReady(true);
-        console.log('Google Maps API loaded!');
-      })
-      .catch(() => alert('Failed to load Google Maps.'));
-  }, []);
 
   return (
-    <div className="h-screen bg-cover opacity-90 flex justify-center items-center bg-center bg-[url('https://res.cloudinary.com/dyjmgpb5p/image/upload/v1742355389/portrait-male-security-guard-with-uniform_23-2150368732_qyyu5p.jpg')]">
-      <div className='relative w-full h-full'>
-        <div className='text-white absolute top-40 left-10 text-lg'>Enter location to get Police station information</div>
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage:
+          "url('https://res.cloudinary.com/dyjmgpb5p/image/upload/v1742355389/portrait-male-security-guard-with-uniform_23-2150368732_qyyu5p.jpg')",
+      }}
+    >
+      {/* Header */}
+      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 p-6 bg-black bg-opacity-60 text-white shadow-md">
+        <button onClick={() => navigate('/')} className="font-bold">Main Portal</button>
+        <nav className="flex gap-6">
+          <Link to="/police" className="hover:text-gray-300">Home</Link>
+          <Link to="/contact" className="hover:text-gray-300">Contact</Link>
+          <Link to="/about" className="hover:text-gray-300">About</Link>
+        </nav>
+      </div>
+
+      {/* Main Body */}
+      <div className="flex flex-col lg:flex-row gap-8 p-6 items-start">
         
-        <div className='absolute top-60 left-10 flex gap-2'>
-          <input 
-            type='text' 
+        {/* Search Panel */}
+        <div className="bg-black bg-opacity-60 text-white p-8 rounded-xl w-full max-w-md mx-auto lg:mx-0 shadow-xl">
+          <p className="text-2xl font-bold mb-6">Enter your location to find nearby police stations:</p>
+          <input
+            type="text"
             value={searchLocation}
             onChange={(e) => setSearchLocation(e.target.value)}
-            placeholder='Enter city or address'
-            className='px-4 py-2 rounded-md w-[300px]'
+            placeholder="Type city, area or landmark..."
+            className="px-5 py-3 w-full mb-6 rounded-lg text-black text-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          <button 
-            onClick={geocodeLocation} 
-            className='bg-black text-white px-4 py-2 rounded-lg hover:bg-opacity-80'
+          <button
+            onClick={geocodeLocation}
+            className="w-full bg-green-600 text-white text-lg font-semibold px-5 py-3 rounded-lg hover:bg-green-700 transition duration-300 shadow-md"
           >
             Search
           </button>
         </div>
 
-        <div className='absolute top-10 left-10 right-10 flex items-center justify-between'>
-          <div 
-            className='bg-black text-white px-4 py-2 rounded-lg opacity-85 hover:cursor-pointer' 
-            onClick={() => navigate("/")}
-          >
-            MAIN Portal
-          </div>
-          <nav className='bg-black bg-opacity-70 text-white px-6 py-2 rounded-lg absolute left-1/2 -translate-x-1/2 inline-flex gap-x-10'>
-            <Link to="/police" className="hover:text-gray-300">Home</Link>
-            <Link to="/contact" className="hover:text-gray-300">Contact</Link>
-            <Link to="/about" className="hover:text-gray-300">About</Link>
-    
-          </nav>
-        </div>
+        {/* Map Section */}
+        {showMap && coordinates && (
+          <div className="relative w-full lg:max-w-4xl h-[400px] bg-white bg-opacity-90 rounded-lg shadow-xl">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowMap(false)}
+              className="absolute top-4 right-4 z-10 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+            >
+              Close Map
+            </button>
 
-        {showMap && (
-          <div className='absolute bottom-10 left-10 right-10 h-[300px] rounded-lg shadow-lg bg-white bg-opacity-90 p-4'>
-            <div className='flex justify-end mb-2'>
-              <button 
-                onClick={() => setShowMap(false)} 
-                className='bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700'
-              >
-                Close Map
-              </button>
-            </div>
-            <div ref={mapRef} className='w-full h-full rounded-lg'></div>
+            <MapContainer center={coordinates} zoom={13} className="w-full h-full rounded-lg z-0">
+              <TileLayer
+                attribution='&copy; OpenStreetMap contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={coordinates}>
+                <Popup>Your searched location</Popup>
+              </Marker>
+              {policeStations.map((station) => (
+                <Marker key={station.id} position={[station.lat, station.lon]}>
+                  <Popup>{station.name}</Popup>
+                </Marker>
+              ))}
+            </MapContainer>
           </div>
         )}
       </div>

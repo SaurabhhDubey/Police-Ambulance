@@ -10,6 +10,8 @@ import Contact from './components/Police/Contact.jsx'
 import About from './components/Police/About.jsx'
 import Register from './components/Ambulance/Register.jsx'
 import Information from './components/Ambulance/Information.jsx'
+import 'leaflet/dist/leaflet.css';
+
 
 
 //const router = createBrowserRouter(

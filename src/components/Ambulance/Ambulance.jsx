@@ -5,7 +5,7 @@ import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-
+// Fix Leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -82,7 +82,7 @@ function Ambulance() {
         backgroundImage: "url('https://res.cloudinary.com/dyjmgpb5p/image/upload/v1745232489/vecteezy_hospital-reception-hall-with-desk-and-elevator-vector_16724353_nhugii.jpg')"
       }}
     >
-      
+      {/* Header */}
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 p-6 bg-black bg-opacity-60 text-white shadow-md">
         <button onClick={() => handleNavigate('/')} className="font-bold">Main Portal</button>
         <div className="flex gap-6">
@@ -91,7 +91,7 @@ function Ambulance() {
         </div>
       </div>
 
-      
+      {/* Search Panel */}
       <div className="p-6 flex flex-col lg:flex-row gap-6">
         <div className="bg-black bg-opacity-60 text-white p-6 rounded-xl w-full max-w-md">
           <p className="text-2xl font-bold mb-4">Enter your location to find nearby hospitals:</p>
@@ -110,10 +110,10 @@ function Ambulance() {
           </button>
         </div>
 
-        
+        {/* Map Section */}
         {showMap && coordinates && (
           <div className="relative w-full h-[400px] rounded-lg overflow-hidden border-2 border-white shadow-xl bg-white bg-opacity-90">
-            
+            {/* Close Button */}
             <button
               onClick={() => setShowMap(false)}
               className="absolute top-4 right-4 z-10 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"

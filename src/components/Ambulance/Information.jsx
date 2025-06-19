@@ -7,7 +7,7 @@ function Information() {
   return (
     <div className="min-h-screen w-full bg-cover bg-center bg-fixed flex flex-col bg-[url('https://res.cloudinary.com/dyjmgpb5p/image/upload/v1745232489/vecteezy_hospital-reception-hall-with-desk-and-elevator-vector_16724353_nhugii.jpg')]">
       
-      
+      {/* Header Section */}
       <div className="w-full flex items-center justify-between p-4 bg-black bg-opacity-50 backdrop-blur-sm shadow-md">
         <div className="flex items-center gap-4">
           <button 
@@ -40,15 +40,15 @@ function Information() {
         </div>
       </div>
 
-      
+      {/* Main Content Section */}
       <div className="flex-1 flex flex-col items-center gap-8 p-6">
 
-        
+        {/* Page Title */}
         <h1 className="text-4xl font-semibold text-white bg-black bg-opacity-40 p-6 rounded-lg shadow-2xl">
           Ambulance & Emergency Process Information
         </h1>
 
-        
+        {/* Ambulance Process Section */}
         <section className="w-full max-w-3xl p-6 bg-black bg-opacity-60 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold text-white mb-4">Ambulance Process</h2>
           <ul className="list-disc pl-6 text-white text-lg leading-relaxed">
@@ -62,7 +62,7 @@ function Information() {
           </p>
         </section>
 
-        
+        {/* Emergency Process Section */}
         <section className="w-full max-w-3xl p-6 bg-black bg-opacity-60 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold text-white mb-4">Emergency Process</h2>
           <ol className="list-decimal pl-6 text-white text-lg leading-relaxed">
@@ -76,7 +76,7 @@ function Information() {
           </p>
         </section>
 
-        
+        {/* Health Rescue Tips Section */}
         <section className="w-full max-w-3xl p-6 bg-black bg-opacity-60 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold text-white mb-4">Health Rescue Tips</h2>
           <ul className="list-disc pl-6 text-white text-lg leading-relaxed">

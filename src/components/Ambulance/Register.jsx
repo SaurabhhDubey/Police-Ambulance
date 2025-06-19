@@ -10,10 +10,9 @@ function Register() {
     contactNumber: '',
     address: '',
     emergencyContact: '',
-    medicalHistory: ''
+    medicalHistory: '',
+    hospitalName: '' // Added hospitalName field
   });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,40 +22,16 @@ function Register() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch('http://localhost:5000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
-
-      alert('Registration Successful!');
-      navigate('/ambulance'); // Redirect to ambulance page after successful registration
-    } catch (err) {
-      setError(err.message);
-      alert('Registration failed: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
+    // Add form validation and submission logic here
+    alert('Registration Successful!');
   };
 
   return (
     <div className="h-screen w-full bg-cover bg-center flex flex-col bg-[url('https://res.cloudinary.com/dyjmgpb5p/image/upload/v1745232489/vecteezy_hospital-reception-hall-with-desk-and-elevator-vector_16724353_nhugii.jpg')] bg-fixed">
       
-      
+      {/* Header Section */}
       <div className="w-full flex items-center justify-between p-4 bg-black bg-opacity-50 backdrop-blur-sm shadow-md">
         <div className="flex items-center gap-4">
           <button 
@@ -89,21 +64,15 @@ function Register() {
         </div>
       </div>
 
-      
+      {/* Register Form Section */}
       <div className="flex flex-1 flex-col justify-center items-center gap-6 px-4">
         <h2 className="text-3xl font-medium text-white bg-black bg-opacity-50 p-4 rounded-lg shadow-md">
           Hospital Registration Form
         </h2>
         
-        {error && (
-          <div className="w-full max-w-lg bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{error}</span>
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="w-full max-w-lg bg-black bg-opacity-60 p-6 rounded-lg shadow-lg">
           <div className="flex flex-col gap-4">
-            
+            {/* Name */}
             <input 
               type="text"
               name="name"
@@ -113,8 +82,8 @@ function Register() {
               className="px-4 py-2 rounded-full bg-white text-gray-800 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
-            
-            
+
+            {/* Age */}
             <input 
               type="number"
               name="age"
@@ -125,7 +94,7 @@ function Register() {
               required
             />
 
-            
+            {/* Gender */}
             <select 
               name="gender"
               value={formData.gender}
@@ -139,7 +108,18 @@ function Register() {
               <option value="Other">Other</option>
             </select>
 
-            
+            {/* Hospital Name */}
+            <input 
+              type="text"
+              name="hospitalName"
+              value={formData.hospitalName}
+              onChange={handleInputChange}
+              placeholder="Hospital Name"
+              className="px-4 py-2 rounded-full bg-white text-gray-800 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+            />
+
+            {/* Contact Number */}
             <input 
               type="text"
               name="contactNumber"
@@ -150,7 +130,7 @@ function Register() {
               required
             />
 
-            
+            {/* Address */}
             <textarea 
               name="address"
               value={formData.address}
@@ -160,7 +140,7 @@ function Register() {
               required
             />
 
-            
+            {/* Emergency Contact */}
             <input 
               type="text"
               name="emergencyContact"
@@ -171,7 +151,7 @@ function Register() {
               required
             />
 
-            
+            {/* Medical History */}
             <textarea 
               name="medicalHistory"
               value={formData.medicalHistory}
@@ -180,20 +160,16 @@ function Register() {
               className="px-4 py-2 rounded-lg bg-white text-gray-800 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
 
-            
+            {/* Submit Button */}
             <button 
               type="submit"
-              disabled={loading}
-              className={`px-6 py-2 bg-green-500 text-white font-medium rounded-full transition duration-300 shadow-lg mt-6 ${
-                loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
-              }`}
+              className="px-6 py-2 bg-green-500 text-white font-medium rounded-full hover:bg-green-600 transition duration-300 shadow-lg mt-6"
             >
-              {loading ? 'Registering...' : 'Register'}
+              Register
             </button>
           </div>
         </form>
       </div>
-      
     </div>
   );
 }

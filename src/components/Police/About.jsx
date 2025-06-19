@@ -7,7 +7,7 @@ function About() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-900 to-black text-white flex flex-col items-center justify-center p-6 space-y-8">
       
-      
+      {/* Navigation Buttons */}
       <div className="flex space-x-4">
         <button
           onClick={() => navigate('/police')}
@@ -23,7 +23,7 @@ function About() {
         </button>
       </div>
 
-      
+      {/* About Section */}
       <div className="bg-yellow-900 bg-opacity-90 p-10 rounded-2xl shadow-2xl max-w-3xl w-full">
         <h1 className="text-4xl font-bold mb-6 text-center border-b-2 border-yellow-600 pb-2">
           👮 About Police Department

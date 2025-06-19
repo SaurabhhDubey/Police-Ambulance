@@ -5,7 +5,7 @@ import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-
+// Fix Leaflet icon issue
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -83,7 +83,7 @@ function Police() {
           "url('https://res.cloudinary.com/dyjmgpb5p/image/upload/v1742355389/portrait-male-security-guard-with-uniform_23-2150368732_qyyu5p.jpg')",
       }}
     >
-      
+      {/* Header */}
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 p-6 bg-black bg-opacity-60 text-white shadow-md">
         <button onClick={() => navigate('/')} className="font-bold">Main Portal</button>
         <nav className="flex gap-6">
@@ -93,10 +93,10 @@ function Police() {
         </nav>
       </div>
 
-      
+      {/* Main Body */}
       <div className="flex flex-col lg:flex-row gap-8 p-6 items-start">
         
-        
+        {/* Search Panel */}
         <div className="bg-black bg-opacity-60 text-white p-8 rounded-xl w-full max-w-md mx-auto lg:mx-0 shadow-xl">
           <p className="text-2xl font-bold mb-6">Enter your location to find nearby police stations:</p>
           <input
@@ -114,10 +114,10 @@ function Police() {
           </button>
         </div>
 
-        
+        {/* Map Section */}
         {showMap && coordinates && (
           <div className="relative w-full lg:max-w-4xl h-[400px] bg-white bg-opacity-90 rounded-lg shadow-xl">
-            
+            {/* Close Button */}
             <button
               onClick={() => setShowMap(false)}
               className="absolute top-4 right-4 z-10 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
